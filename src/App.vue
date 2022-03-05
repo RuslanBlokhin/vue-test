@@ -12,25 +12,49 @@ export default {
       user: null,
       isOpen: false,
       login: "",
+      avatar: null,
+      created_at: null,
+      bio: null,
+      location: null,
+      nameF: null,
+      email: null,
     };
   },
 
   methods: {
     async fetchData() {
-      this.data = null;
-      const res = await fetch(
-        `https://api.github.com/search/users?order=${this.sort}&q=${this.q}+in:login&sort=repositories&type:user&per_page=${this.page}`
-      );
-      this.data = await res.json();
+      try {
+        this.data = null;
+        const res = await fetch(
+          `https://api.github.com/search/users?order=${this.sort}&q=${this.q}+in:login&sort=repositories&type:user&per_page=${this.page}`
+        );
+        this.data = await res.json();
+      } catch (error) {
+        console.log(error.message);
+      }
     },
 
     async fetchUser(e) {
-      this.isOpen = true;
-      this.login = e.target.textContent;
-      const res = await fetch(`https://api.github.com/users/${this.login}`);
-      this.user = await res.json();
-      console.log(this.user);
-      console.log(this.login);
+      try {
+        this.isOpen = true;
+        this.login = e.target.textContent;
+        const res = await fetch(`https://api.github.com/users/${this.login}`);
+        this.user = await res.json();
+        this.avatar = this.user.avatar_url;
+        this.bio = this.user.bio;
+        this.location = this.user.location;
+        this.nameF = this.user.name;
+        this.email = this.user.email;
+        this.created_at = this.user.created_at
+          .slice(0, 10)
+          .split("-")
+          .reverse()
+          .join("-");
+        console.log(this.user);
+        console.log(this.created_at);
+      } catch (e) {
+        console.log(e.message);
+      }
     },
 
     loadMore() {
@@ -65,10 +89,23 @@ export default {
   <button @click="sorting" v-if="data" :class="$style.sortBtn">
     Sort: {{ mostRepo ? "Most repositories" : "Fewest repositories" }}
   </button>
-  <RouterView v-if="isOpen" />
+  <div v-if="isOpen" :class="$style.details">
+    <img :src="avatar" alt="ava" :class="$style.details__avatar" />
+    <div :class="$style.details__info">
+      <h2>{{ login }}</h2>
+      <p :class="$style.details__info__date">Created at: {{ created_at }}</p>
+      <p v-if="nameF" :class="$style.details__info__name">{{ nameF }}</p>
+      <p v-if="location" :class="$style.details__info__date">
+        Location: {{ location }}
+      </p>
+      <p v-if="email">{{ email }}</p>
+      <div v-if="bio" :class="$style.details__info__bio">{{ bio }}</div>
+    </div>
+  </div>
+
   <p v-if="!data">No result</p>
   <ul v-else :class="$style.list">
-    <RouterLink
+    <li
       to="/details"
       v-for="user in data.items"
       :key="user.id"
@@ -76,7 +113,7 @@ export default {
       @click="fetchUser"
     >
       {{ user.login }}
-    </RouterLink>
+    </li>
   </ul>
   <div :class="$style.loadmorebtnWwrapper" v-if="data" @click="loadMore">
     <button>Load more</button>
@@ -122,5 +159,30 @@ export default {
 .sortBtn {
   margin-top: 10px;
   margin-bottom: 30px;
+}
+.details {
+  display: flex;
+  min-width: 450px;
+  z-index: 100;
+  padding: 5px;
+  margin-bottom: 10px;
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+}
+.details__avatar {
+  border-radius: 50%;
+  max-width: 250px;
+  height: 100%;
+}
+.details__info {
+  margin-left: 30px;
+}
+.details__info__date {
+  color: grey;
+  font-size: 12px;
+}
+.details__info__name {
+  font-size: 18px;
+  font-weight: 500;
 }
 </style>
