@@ -30,7 +30,7 @@ export default {
         );
         this.data = await res.json();
       } catch (error) {
-        console.log(error.message);
+        alert("OOOPS" + error.message);
       }
     },
 
@@ -49,11 +49,14 @@ export default {
           .slice(0, 10)
           .split("-")
           .reverse()
-          .join("-");
-        console.log(this.user);
-        console.log(this.created_at);
+          .join(".");
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
       } catch (e) {
-        console.log(e.message);
+        console.log(e);
+        alert("OOOPS, somthing went wrong: " + e.message);
       }
     },
 
@@ -61,6 +64,10 @@ export default {
       if (this.page === 100) return;
       else this.page = this.page + 20;
       this.fetchData();
+    },
+
+    exitDetails() {
+      this.isOpen = false;
     },
 
     sorting() {
@@ -101,6 +108,20 @@ export default {
       <p v-if="email">{{ email }}</p>
       <div v-if="bio" :class="$style.details__info__bio">{{ bio }}</div>
     </div>
+    <!-- <div :class="$style.exitBtn"> -->
+    <svg
+      @click="exitDetails"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      :class="$style.iconExit"
+    >
+      <path
+        d="M17.707 16.293a1 1 0 0 1-1.414 1.414L12 13.414l-4.293 4.293a1 1 0 0 1-1.414-1.414L10.586 12 6.293 7.707a1 1 0 0 1 1.414-1.414L12 10.586l4.293-4.293a1 1 0 1 1 1.414 1.414L13.414 12l4.293 4.293z"
+      ></path>
+    </svg>
+    <!-- </div> -->
   </div>
 
   <p v-if="!data">No result</p>
@@ -162,9 +183,10 @@ export default {
 }
 .details {
   display: flex;
+  justify-content: space-between;
   min-width: 450px;
   z-index: 100;
-  padding: 5px;
+  padding: 10px;
   margin-bottom: 10px;
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2),
     0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12);
@@ -175,7 +197,7 @@ export default {
   height: 100%;
 }
 .details__info {
-  margin-left: 30px;
+  max-width: 220px;
 }
 .details__info__date {
   color: grey;
@@ -184,5 +206,16 @@ export default {
 .details__info__name {
   font-size: 18px;
   font-weight: 500;
+}
+/* .exitBtn {
+  cursor: pointer;
+} */
+.iconExit {
+  fill: grey;
+  cursor: pointer;
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.iconExit:hover {
+  fill: black;
 }
 </style>
