@@ -50,13 +50,14 @@ export default {
           .split("-")
           .reverse()
           .join(".");
+      } catch (e) {
+        console.log(e);
+        alert("OOOPS, somthing went wrong: " + e.message);
+      } finally {
         window.scrollTo({
           top: 0,
           behavior: "smooth",
         });
-      } catch (e) {
-        console.log(e);
-        alert("OOOPS, somthing went wrong: " + e.message);
       }
     },
 
