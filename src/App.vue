@@ -16,10 +16,9 @@ export default {
   },
 
   methods: {
-    async fetchData() {
+    async fetchData(e) {
       this.info = "Loading...";
-      this.isOpen = false;
-      this.data = null;
+      if (this.q === e.target.value) this.isOpen = false;
       try {
         const res = await fetch(
           `https://api.github.com/search/users?order=${this.sort}&q=${this.q}+in:login&sort=repositories&type:user&per_page=${this.page}`
@@ -28,11 +27,10 @@ export default {
       } catch (error) {
         alert("OOOPS" + error.message);
       }
-      console.log(this.data.items.length);
+      if (this.data.items.length === 0) this.info = "No result";
     },
 
     async fetchUser(e) {
-      this.isOpen = true;
       try {
         this.login = e.target.textContent;
         const res = await fetch(`https://api.github.com/users/${this.login}`);
@@ -42,6 +40,7 @@ export default {
           .split("-")
           .reverse()
           .join(".");
+        this.isOpen = true;
       } catch (e) {
         console.log(e);
         alert("OOOPS, somthing went wrong: " + e.message);
@@ -54,7 +53,7 @@ export default {
     },
 
     loadMore() {
-      // this.isOpen = true;
+      this.isOpen = true;
       this.info = "Loading...";
       if (this.page === 100) return;
       else this.page = this.page + 20;
