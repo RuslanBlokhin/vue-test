@@ -1,37 +1,9 @@
 <script>
-import Search from "./Search.vue";
 export default {
   methods: {
-    async fetchUser(e) {
-      try {
-        // this.$store.state.isOpen = true;
-        this.login = e.target.textContent;
-        const res = await fetch(`https://api.github.com/users/${this.login}`);
-        this.$store.state.user = await res.json();
-        this.$store.state.created_at = this.$store.state.user.created_at
-          .slice(0, 10)
-          .split("-")
-          .reverse()
-          .join(".");
-        console.log(this.$store.state.created_at);
-        this.$store.state.isOpen = true;
-      } catch (e) {
-        alert("OOOPS, somthing went wrong: " + e.message);
-      } finally {
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
-      }
-    },
-
-    loadMore() {
-      this.$store.state.info = "Loading...";
-      this.$store.state.page = 20;
-      if (this.$store.state.page === 100) return;
-      else this.$store.state.page = this.$store.state.page + 20;
-      Search.methods.fetchData();
-      // this.fetchData();
+    getLogin(e) {
+      this.$store.state.login = e.target.textContent;
+      this.$store.dispatch("fetchUser");
     },
   },
 };
@@ -49,7 +21,7 @@ export default {
       v-for="user in $store.state.data.items"
       :key="user.id"
       :class="$style.list__item"
-      @click="fetchUser"
+      @click="getLogin"
     >
       {{ user.login }}
     </li>
@@ -57,7 +29,7 @@ export default {
   <div :class="$style.loadmorebtnWwrapper">
     <button
       v-if="$store.state.data && $store.state.data.items.length !== 0"
-      @click="loadMore"
+      @click="$store.commit('loadMore')"
     >
       Load more
     </button>
