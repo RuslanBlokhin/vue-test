@@ -23,18 +23,20 @@
         {{ $store.state.user.bio }}
       </div>
     </div>
-    <svg
-      @click="$store.state.isOpen = false"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-      :class="$style.iconExit"
-    >
-      <path
-        d="M17.707 16.293a1 1 0 0 1-1.414 1.414L12 13.414l-4.293 4.293a1 1 0 0 1-1.414-1.414L10.586 12 6.293 7.707a1 1 0 0 1 1.414-1.414L12 10.586l4.293-4.293a1 1 0 1 1 1.414 1.414L13.414 12l4.293 4.293z"
-      ></path>
-    </svg>
+    <RouterLink to="/">
+      <svg
+        @click="$store.state.isOpen = false"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+        :class="$style.iconExit"
+      >
+        <path
+          d="M17.707 16.293a1 1 0 0 1-1.414 1.414L12 13.414l-4.293 4.293a1 1 0 0 1-1.414-1.414L10.586 12 6.293 7.707a1 1 0 0 1 1.414-1.414L12 10.586l4.293-4.293a1 1 0 1 1 1.414 1.414L13.414 12l4.293 4.293z"
+        ></path>
+      </svg>
+    </RouterLink>
   </div>
 </template>
 

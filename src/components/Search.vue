@@ -3,13 +3,16 @@
 <template>
   <div :class="$style.search">
     <h2>Enter login:</h2>
+
     <input
       v-model="$store.state.q"
-      @keyup.enter="$store.dispatch('fetchData')"
+      @keyup.enter="$router.push({ path: '/' }), $store.dispatch('fetchData')"
     />
-    <button @click="$store.dispatch('fetchData')" :class="$style.searchBtn">
-      Search
-    </button>
+    <RouterLink to="/">
+      <button @click="$store.dispatch('fetchData')" :class="$style.searchBtn">
+        Search
+      </button>
+    </RouterLink>
     <button
       @click="$store.commit('sorting')"
       v-if="$store.state.data && $store.state.data.items.length !== 0"

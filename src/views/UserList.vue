@@ -17,14 +17,15 @@ export default {
     {{ $store.state.info }}
   </p>
   <ul v-else :class="$style.list">
-    <li
+    <RouterLink
+      to="/details"
       v-for="user in $store.state.data.items"
       :key="user.id"
       :class="$style.list__item"
       @click="getLogin"
     >
       {{ user.login }}
-    </li>
+    </RouterLink>
   </ul>
   <div :class="$style.loadmorebtnWwrapper">
     <button
